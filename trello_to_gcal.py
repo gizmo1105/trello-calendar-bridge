@@ -93,6 +93,8 @@ def build_event_from_card(card):
         return None
 
     start_dt = datetime.fromisoformat(due.replace("Z", "+00:00")).astimezone(timezone.utc)
+   
+    
     end_dt = start_dt + timedelta(hours=2)  # adjust duration if needed
 
     description, location = build_description(card)
@@ -132,9 +134,10 @@ def main():
 
     marker = "[TRELLO_SYNC]"
 
-    now = datetime.utcnow()
-    time_min = (now - timedelta(days=30)).isoformat() + "Z"
-    time_max = (now + timedelta(days=365)).isoformat() + "Z"
+    now = datetime.now(timezone.utc)
+    time_min = now.isoformat().replace("+00:00", "Z")
+    time_max = (now + timedelta(days=365)).isoformat().replace("+00:00", "Z")
+
 
     existing = service.events().list(
         calendarId=CALENDAR_ID,
@@ -158,6 +161,12 @@ def main():
     # Create events from Trello cards
     for card in cards:
         if card.get("closed") or not card.get("due"):
+            continue
+        
+        due_str = card["due"]
+        start_dt = datetime.fromisoformat(due_str.replace("Z", "+00:00")).astimezone(timezone.utc)
+         # Skip cards whose event time is already in the past
+        if start_dt < now:
             continue
 
         body = build_event_from_card(card)
