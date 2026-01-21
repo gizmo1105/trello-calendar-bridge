@@ -1,6 +1,7 @@
 import os
 import json
 from datetime import datetime, timedelta, timezone
+from Models.booking_model import Booking
 
 import requests
 from google.oauth2 import service_account
@@ -72,18 +73,40 @@ def extract_location_and_notes(desc: str):
 
 
 def build_description(card):
-    desc = card.get("desc") or ""
-    location, notes = extract_location_and_notes(desc)
+    booking = Booking.from_description(card.get("desc") or "")
 
     parts = []
-    if notes:
-        parts.append(notes)
 
-    # always add Trello link for easy jump-back
+    if booking.nafn:
+        parts.append(f"Nafn: {booking.nafn}")
+    if booking.kennitala_greidanda:
+        parts.append(f"Kennitala greiðanda: {booking.kennitala_greidanda}")
+    if booking.netfang:
+        parts.append(f"Netfang: {booking.netfang}")
+    if booking.simanumer:
+        parts.append(f"Símanúmer: {booking.simanumer}")
+    if booking.dagsetning_vidburdar:
+        parts.append(f"Dagsetning viðburðar: {booking.dagsetning_vidburdar}")
+    if booking.timasetning_vidburdar:
+        parts.append(f"Tímasetning viðburðar: {booking.timasetning_vidburdar}")
+    # if booking.stadsetning:
+        # parts.append(f"Staðsetning: {booking.stadsetning}")
+    if booking.osk_um_bakgrunn:
+        parts.append(f"Ósk um bakgrunn: {booking.osk_um_bakgrunn}")
+    if booking.pakka_tilbod:
+        parts.append(f"Pakka tilboð: {booking.pakka_tilbod}")
+    if booking.ljosmynda_prentari:
+        parts.append(f"Ljósmynda prentari: {booking.ljosmynda_prentari}")
+    if booking.greidslumati:
+        parts.append(f"Greiðslumáti: {booking.greidslumati}")
+    if booking.skemmtilegir_aukahlutir:
+        parts.append(f"Skemmtilegir aukahlutir: {booking.skemmtilegir_aukahlutir}")
+    if booking.annad:
+        parts.append(f"Annað:\n{booking.annad}")
+
     parts.append(f"Trello card: {card['url']}")
 
-    return "\n\n".join(parts), location
-
+    return "\n\n".join(parts), booking.stadsetning, booking
 
 
 def build_event_from_card(card):
@@ -97,7 +120,7 @@ def build_event_from_card(card):
     
     end_dt = start_dt + timedelta(hours=2)  # adjust duration if needed
 
-    description, location = build_description(card)
+    description, location, booking = build_description(card)
 
     event = {
         "summary": card["name"],
