@@ -92,6 +92,7 @@ class Booking:
                 label, value = line.split(":", 1)
                 label_norm = _normalize_label(label)
                 attr = LABEL_TO_ATTR.get(label_norm)
+                print(f"Parsed label: '{label}' -> '{label_norm}' -> attr: '{attr}'")
 
                 if attr:
                     flush()
