@@ -74,6 +74,7 @@ def extract_location_and_notes(desc: str):
 
 def build_description(card):
     booking = Booking.from_description(card.get("desc") or "")
+    
 
     parts = []
 
@@ -118,12 +119,12 @@ def build_event_from_card(card):
     start_dt = datetime.fromisoformat(due.replace("Z", "+00:00")).astimezone(timezone.utc)
    
     
-    end_dt = start_dt + timedelta(hours=2)  # adjust duration if needed
+    end_dt = start_dt + timedelta(hours=1)  # adjust duration if needed
 
     description, location, booking = build_description(card)
 
     event = {
-        "summary": card["name"],
+        "summary": booking.nafn or card["name"],
         "description": description,
         "start": {
             "dateTime": start_dt.isoformat(),

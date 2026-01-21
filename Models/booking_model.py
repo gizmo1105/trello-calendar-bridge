@@ -71,21 +71,57 @@ class Booking:
         if not desc:
             return booking
 
+        current_attr = None
+        buffer_lines = []
+
+        def flush():
+            nonlocal current_attr, buffer_lines
+            if current_attr is not None:
+                text = "\n".join(buffer_lines).strip()
+                if text:
+                    setattr(booking, current_attr, text)
+            current_attr = None
+            buffer_lines = []
+
         for raw in desc.splitlines():
             line = raw.strip()
             if not line:
+                # keep blank lines only if we're collecting a multiline value
+                if current_attr is not None:
+                    buffer_lines.append("")
                 continue
-            if ":" not in line:
-                continue
-            label, value = line.split(":", 1)
-            label_norm = _normalize_label(label)
-            attr = LABEL_TO_ATTR.get(label_norm)
-            if not attr:
-                continue
-            value = value.strip() or None
-            setattr(booking, attr, value)
 
+            # If this looks like "Label: value", try to interpret it
+            if ":" in line:
+                label, value = line.split(":", 1)
+                label_norm = _normalize_label(label)
+                attr = LABEL_TO_ATTR.get(label_norm)
+
+                if attr:
+                    # New known field begins -> finish previous multiline field
+                    flush()
+
+                    value = value.strip()
+                    if value:
+                        setattr(booking, attr, value)
+                        current_attr = None
+                        buffer_lines = []
+                    else:
+                        # Start collecting multiline value (e.g. "Annað:" with text below)
+                        current_attr = attr
+                        buffer_lines = []
+                    continue
+
+            # Not a recognized field line:
+            # If we're collecting multiline content, append it
+            if current_attr is not None:
+                buffer_lines.append(raw.rstrip())
+
+            # else: strict mode -> ignore unknown lines
+
+        flush()
         return booking
+
 
     def to_dict(self):
         return {
