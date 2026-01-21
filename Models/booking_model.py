@@ -1,38 +1,28 @@
-import unicodedata
+import re
 from typing import Optional
 
 def _normalize_label(s: str) -> str:
-    s = (s or "").strip().lower()
-    s = unicodedata.normalize("NFKD", s)
-    return "".join(ch for ch in s if not unicodedata.combining(ch))
+    s = s.strip().lower()
+    s = s.replace("\u00A0", " ")  # NBSP -> space
+    s = re.sub(r"\s+", " ", s)    # collapse whitespace
+    return s
 
 LABEL_TO_ATTR = {
     "nafn": "nafn",
-    "kennitala greidanda": "kennitala_greidanda",
     "kennitala greiðanda": "kennitala_greidanda",
     "netfang": "netfang",
-    "simanumer": "simanumer",
     "símanúmer": "simanumer",
-    "sími": "simanumer",
-    "simi": "simanumer",
-    "dagsetning vidburdar": "dagsetning_vidburdar",
     "dagsetning viðburðar": "dagsetning_vidburdar",
-    "timasetning vidburdar": "timasetning_vidburdar",
     "tímasetning viðburðar": "timasetning_vidburdar",
-    "stadsetning": "stadsetning",
     "staðsetning": "stadsetning",
-    "annad": "annad",
     "annað": "annad",
-    "osk um bakgrunn": "osk_um_bakgrunn",
     "ósk um bakgrunn": "osk_um_bakgrunn",
-    "pakka tilbod": "pakka_tilbod",
     "pakka tilboð": "pakka_tilbod",
-    "ljosmynda prentari": "ljosmynda_prentari",
     "ljósmynda prentari": "ljosmynda_prentari",
     "skemmtilegir aukahlutir": "skemmtilegir_aukahlutir",
-    "greidslumati": "greidslumati",
-    "greiðslumáti": "greidslumati",
+    "greiðslumáti": "greidslumati",                    
 }
+
 
 class Booking:
     def __init__(
