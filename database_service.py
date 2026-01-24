@@ -23,7 +23,7 @@ class DatabaseService:
             "event_date": card["due"],
 
             "name": booking.nafn,
-            "sid": booking.kennitala_greidanda,
+            "sid": booking.kennitala_greidanda.replace("-", "") if booking.kennitala_greidanda else None,
             "email": booking.netfang,
             "mobile": booking.simanumer,
             "event_time": booking.timasetning_vidburdar,

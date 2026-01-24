@@ -56,23 +56,6 @@ def trello_due_to_iso(due):
     dt = datetime.fromisoformat(due.replace("Z", "+00:00")).astimezone(timezone.utc)
     return dt.isoformat()
 
-def extract_location_and_notes(desc: str):
-    """
-    Treat the *first non-empty line* of the description as the location (address),
-    and the rest as notes.
-    """
-    if not desc:
-        return None, ""
-
-    lines = [l for l in desc.splitlines() if l.strip()]
-    if not lines:
-        return None, ""
-
-    location = lines[0].strip()
-    notes = "\n".join(lines[1:]) if len(lines) > 1 else ""
-    return location, notes
-
-
 def build_description(card):
     booking = Booking.from_description(card.get("desc") or "")
     
@@ -192,7 +175,7 @@ def main():
         body["description"] = f"{marker}\n{body.get('description','')}".strip()
 
         db.upsert_booking(card, booking)
-        
+
         service.events().insert(
             calendarId=CALENDAR_ID,
             body=body
