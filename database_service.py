@@ -8,8 +8,8 @@ load_dotenv()
 
 class DatabaseService:
     def __init__(self):
-        url = os.environ.get("SUPABASE_URL")
-        key = os.environ.get("SUPABASE_KEY")
+        url = os.environ["SUPABASE_URL"]
+        key = os.environ["SUPABASE_KEY"]
 
         if not url or not key:
             raise RuntimeError("Supabase credentials missing")
@@ -35,6 +35,7 @@ class DatabaseService:
             "printer_info": booking.ljosmynda_prentari,
             "extras": booking.skemmtilegir_aukahlutir,
             "payment_option": booking.greidslumati,
+
             "updated_on": datetime.now(timezone.utc),
         }
 
