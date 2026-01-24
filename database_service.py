@@ -8,12 +8,11 @@ load_dotenv()
 
 class DatabaseService:
     def __init__(self):
-        url = os.environ["SUPABASE_URL"]
-        key = os.environ["SUPABASE_KEY"]
+        url = os.environ.get("SUPABASE_URL")
+        key = os.environ.get("SUPABASE_KEY")
 
         if not url or not key:
             raise RuntimeError("Supabase credentials missing")
-
         self.client: Client = create_client(url, key)
 
     def upsert_booking(self, card, booking):
