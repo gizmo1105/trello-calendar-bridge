@@ -1,3 +1,4 @@
+
 import re
 from typing import Optional
 
@@ -117,3 +118,6 @@ class Booking:
             "skemmtilegir_aukahlutir": self.skemmtilegir_aukahlutir,
             "greidslumati": self.greidslumati,
         }
+    
+
+    

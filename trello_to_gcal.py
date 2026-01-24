@@ -2,6 +2,7 @@ import os
 import json
 from datetime import datetime, timedelta, timezone
 from Models.booking_model import Booking
+from database_service import DatabaseService
 
 import requests
 from google.oauth2 import service_account
@@ -117,10 +118,7 @@ def build_event_from_card(card):
         return None
 
     start_dt = datetime.fromisoformat(due.replace("Z", "+00:00")).astimezone(timezone.utc)
-   
-    
     end_dt = start_dt + timedelta(hours=1)  # adjust duration if needed
-
     description, location, booking = build_description(card)
 
     event = {
@@ -136,7 +134,6 @@ def build_event_from_card(card):
         },
     }
 
-    # If we found an address-like first line, use it as event location
     if location:
         event["location"] = location
 
@@ -148,14 +145,15 @@ def build_event_from_card(card):
         if color_id:
             event["colorId"] = color_id
 
-    return event
+    return event, booking
 
 
 
 def main():
     service = get_calendar_service()
     cards = fetch_trello_cards()
-
+    db = DatabaseService()
+    
     marker = "[TRELLO_SYNC]"
 
     now = datetime.now(timezone.utc)
@@ -171,37 +169,30 @@ def main():
         orderBy="startTime",
     ).execute()
 
-    existing_events = existing.get("items", [])
-
-    # Delete previous synced events
-    for event in existing_events:
+    for event in existing.get("items", []):
         desc = event.get("description", "") or ""
         if marker in desc:
-            service.events().delete(
-                calendarId=CALENDAR_ID,
-                eventId=event["id"]
-            ).execute()
+            service.events().delete(calendarId=CALENDAR_ID, eventId=event["id"]).execute()
+
 
     # Create events from Trello cards
     for card in cards:
         if card.get("closed") or not card.get("due"):
             continue
         
-        due_str = card["due"]
-        start_dt = datetime.fromisoformat(due_str.replace("Z", "+00:00")).astimezone(timezone.utc)
-         # Skip cards whose event time is already in the past
+        start_dt = datetime.fromisoformat(card["due"].replace("Z", "+00:00")).astimezone(timezone.utc)
         if start_dt < now:
             continue
 
-        body = build_event_from_card(card)
-        if not body:
+        result = build_event_from_card(card)
+        if not result:
             continue
+        body, booking = result
 
-        if body["description"]:
-            body["description"] = f"{marker}\n" + body["description"]
-        else:
-            body["description"] = marker
+        body["description"] = f"{marker}\n{body.get('description','')}".strip()
 
+        db.upsert_booking(card, booking)
+        
         service.events().insert(
             calendarId=CALENDAR_ID,
             body=body
