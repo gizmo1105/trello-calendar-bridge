@@ -34,8 +34,8 @@ class DatabaseService:
             "printer_info": booking.ljosmynda_prentari,
             "extras": booking.skemmtilegir_aukahlutir,
             "payment_option": booking.greidslumati,
+            "updated_on": datetime.now(timezone.utc).isoformat(),
 
-            "updated_on": datetime.now(timezone.utc),
         }
 
         self.client.table("bookings").upsert(
