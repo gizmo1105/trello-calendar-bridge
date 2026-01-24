@@ -20,7 +20,7 @@ class DatabaseService:
             "card_id": card["id"],
             "trello_url": card["url"],
             "card_name": card["name"],
-            "event_date": card("due"),
+            "event_date": card["due"],
 
             "name": booking.nafn,
             "sid": booking.kennitala_greidanda,
