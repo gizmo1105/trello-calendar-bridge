@@ -1,9 +1,8 @@
 import os
 from datetime import datetime, timezone
-from dotenv import load_dotenv
+
 from supabase import create_client, Client
 
-load_dotenv()
 
 
 class DatabaseService:
