@@ -46,6 +46,9 @@ Supabase (data + logs)
 ## 📁 Project Structure
 
 trello-calendar-bridge/
+├─.github/
+| ├─workflows/
+|   ├─sync.yml # Defines the GitHub Actions workflow
 ├─ main.py # Orchestration entry point
 ├─ config.py # Environment variables & constants
 ├─ clients/
@@ -127,7 +130,7 @@ GOOGLE_SERVICE_ACCOUNT_JSON
 - Clone the repo
 
 ```bash
-git clone https://github.com/yourusername/trello-calendar-bridge.git
+git clone https://github.com/gizmo1105/trello-calendar-bridge.git
 cd trello-calendar-bridge
 ```
 
