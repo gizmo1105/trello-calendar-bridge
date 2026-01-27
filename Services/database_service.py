@@ -29,7 +29,7 @@ class DatabaseService:
             "notes": booking.annad,
             "backdrops": booking.osk_um_bakgrunn,
             "combo": booking.pakka_tilbod,
-            "printer_info": booking.ljosmynda_prentari,
+            "printer_info": booking.ljosmynda_prentari, 
             "extras": booking.skemmtilegir_aukahlutir,
             "payment_option": booking.greidslumati,
             "updated_on": datetime.now(timezone.utc).isoformat(),

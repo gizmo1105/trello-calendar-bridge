@@ -28,7 +28,7 @@ Designed for small teams and businesses that want calendar visibility, reporting
 ---
 
 ## 🧱 Architecture Overview
-
+```bash
 Trello Board
 │
 │ (API)
@@ -42,9 +42,9 @@ Trello Calendar Bridge
 ▼
 Google Calendar (read-only)
 Supabase (data + logs)
-
+```
 ## 📁 Project Structure
-
+```bash
 trello-calendar-bridge/
 ├─.github/
 | ├─workflows/
@@ -64,7 +64,7 @@ trello-calendar-bridge/
 ├─ secrets/ # Local-only credentials (gitignored)
 ├─ .env # Local environment variables (gitignored)
 └─ requirements.txt
-
+```
 ## 📝 Trello Card Format
 
 The integration expects structured fields inside the **card description**, for example:
