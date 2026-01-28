@@ -1,0 +1,58 @@
+site_name: Trello Calendar Bridge
+site_description: Automated Trello → Calendar & Database sync
+site_author: Gissur Már Jónsson
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+  markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+      pygments_style: material
+      pygments_style_dark: material
+  - pymdownx.superfences
+
+  
+nav:
+  - Overview: index.md
+  - Architecture: architecture.md
+  - Configuration: configuration.md
+  - Sync Flow: sync-flow.md
+  - API Reference:
+      - Trello Client: api/trello_client.md
+      - Google Calendar Client: api/gcal_client.md
+      - Database Service: api/database_service.md
+      - Sync Logger: api/sync_logger.md
+      - Booking Model: api/booking_model.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            extra:
+              show_source: false
+              show_root_heading: true
+              show_signature_annotations: true
+            

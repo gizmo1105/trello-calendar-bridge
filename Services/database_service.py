@@ -1,3 +1,9 @@
+"""
+Database service for Supabase interactions.
+
+"""
+
+
 import os
 from datetime import datetime, timezone
 from supabase import create_client, Client
@@ -5,6 +11,9 @@ from supabase import create_client, Client
 
 
 class DatabaseService:
+    """
+    Supabase database service for managing bookings.   
+    """
     def __init__(self):
         url = os.environ.get("SUPABASE_URL")
         key = os.environ.get("SUPABASE_KEY")
@@ -14,6 +23,15 @@ class DatabaseService:
         self.client: Client = create_client(url, key)
 
     def upsert_booking(self, card, booking):
+        """
+        Upsert a booking record into the database.  
+
+        Args:
+            card: Trello card dictionary.
+            booking: Booking object with details.
+        Returns:
+            None
+        """
         data = {
             "card_id": card["id"],
             "trello_url": card["url"],

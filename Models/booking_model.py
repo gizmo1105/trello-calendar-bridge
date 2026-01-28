@@ -103,6 +103,14 @@ class Booking:
 
 
     def to_dict(self):
+        """
+        Serialize the booking to a dictionary.
+
+        Args:            
+            None
+        Returns:
+            dict: Dictionary representation of the booking.
+        """
         return {
             "nafn": self.nafn,
             "kennitala_greidanda": self.kennitala_greidanda,
