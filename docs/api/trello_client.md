@@ -1,2 +1,2 @@
 # Trello Client
-::: clients.trello_client
+::: Clients.trello_client

@@ -2,11 +2,11 @@ from dotenv import load_dotenv
 load_dotenv()
 from datetime import datetime, timedelta, timezone
 from config import CALENDAR_ID, SYNC_MARKER, SYNC_WINDOW_DAYS
-from clients.trello_client import fetch_cards
-from clients.gcal_client import get_calendar_service, delete_synced_events, insert_event
-from mappers.calendar_mapper import build_event_from_card
-from services.database_service import DatabaseService
-from services.logging_service import SyncLogger
+from Clients.trello_client import fetch_cards
+from Clients.gcal_client import get_calendar_service, delete_synced_events, insert_event
+from Mappers.calendar_mapper import build_event_from_card
+from Services.database_service import DatabaseService
+from Services.logging_service import SyncLogger
 
 
 def main():

@@ -1,2 +1,2 @@
 # Booking Model
-::: models.booking_model
+::: Models.booking_model
