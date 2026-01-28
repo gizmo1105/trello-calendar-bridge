@@ -1,3 +1,3 @@
 # Google Calendar Client
 
-::: clients.gcal_client
+::: Clients.gcal_client

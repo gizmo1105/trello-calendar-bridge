@@ -1,2 +1,2 @@
 # Sync Logger
-::: services.logging_service
+::: Services.logging_service
