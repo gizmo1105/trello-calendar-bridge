@@ -1,6 +1,27 @@
 from datetime import datetime, timedelta, timezone
-from config import LABEL_COLOR_TO_GCAL, DEFAULT_EVENT_DURATION_HOURS
+from config import LABEL_COLOR_TO_GCAL, DEFAULT_EVENT_DURATION_HOURS, SERVICE_FLAGS
 from Models.booking_model import Booking
+
+def extract_service_flags(labels):
+    """
+    Convert Trello labels into boolean service flags.
+
+    Returns:
+        dict[str, bool]
+    """
+    flags = {cfg["db_field"]: False for cfg in SERVICE_FLAGS.values()}
+
+    for label in labels or []:
+        name = (label.get("name") or "").strip().lower()
+        if not name:
+            continue
+
+        for cfg in SERVICE_FLAGS.values():
+            if name in cfg["labels"]:
+                flags[cfg["db_field"]] = True
+
+    return flags
+
 
 def build_description(card):
     booking = Booking.from_description(card.get("desc") or "")
@@ -32,6 +53,8 @@ def build_event_from_card(card):
     end_dt = start_dt + timedelta(hours=DEFAULT_EVENT_DURATION_HOURS)
 
     description, location, booking = build_description(card)
+    
+    service_flags = extract_service_flags(card.get("labels"))
 
     event = {
         "summary": booking.nafn or card["name"],
@@ -43,11 +66,5 @@ def build_event_from_card(card):
     if location:
         event["location"] = location
 
-    labels = card.get("labels") or []
-    if labels:
-        trello_color = labels[0].get("color")
-        color_id = LABEL_COLOR_TO_GCAL.get(trello_color)
-        if color_id:
-            event["colorId"] = color_id
 
-    return event, booking, start_dt
+    return event, booking, start_dt, service_flags

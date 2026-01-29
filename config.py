@@ -19,6 +19,25 @@ LABEL_COLOR_TO_GCAL = {
     "blue": "7",    # Peacock-ish
 }
 
+SERVICE_FLAGS = {
+    "printer": {
+        "labels": ["prentari"],
+        "db_field": "printer",
+    },
+    "shipping": {
+        "labels": ["akstur", "sending", "flutningur"],
+        "db_field": "shipping",
+    },
+    "weekend_rental": {
+        "labels": ["helgarleiga", "weekend"],
+        "db_field": "weekend_rental",
+    },
+    "extras": {
+        "labels": ["aukahlutir"],
+        "db_field": "extras",
+    },
+}
+
 SYNC_MARKER = "[TRELLO_SYNC]"
 SYNC_WINDOW_DAYS = 365
 DEFAULT_EVENT_DURATION_HOURS = 1
