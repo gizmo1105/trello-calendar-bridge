@@ -37,7 +37,6 @@ class DatabaseService:
             "trello_url": card["url"],
             "card_name": card["name"],
             "event_date": card["due"],
-
             "name": booking.nafn,
             "sid": booking.kennitala_greidanda.replace("-", "") if booking.kennitala_greidanda else None,
             "email": booking.netfang,
