@@ -22,7 +22,7 @@ class DatabaseService:
             raise RuntimeError("Supabase credentials missing")
         self.client: Client = create_client(url, key)
 
-    def upsert_booking(self, card, booking):
+    def upsert_booking(self, card, booking, service_flags):
         """
         Upsert a booking record into the database.  
 
@@ -37,7 +37,6 @@ class DatabaseService:
             "trello_url": card["url"],
             "card_name": card["name"],
             "event_date": card["due"],
-
             "name": booking.nafn,
             "sid": booking.kennitala_greidanda.replace("-", "") if booking.kennitala_greidanda else None,
             "email": booking.netfang,
@@ -47,9 +46,9 @@ class DatabaseService:
             "notes": booking.annad,
             "backdrops": booking.osk_um_bakgrunn,
             "combo": booking.pakka_tilbod,
-            "printer_info": booking.ljosmynda_prentari, 
             "extras": booking.skemmtilegir_aukahlutir,
             "payment_option": booking.greidslumati,
+            **service_flags,
             "updated_on": datetime.now(timezone.utc).isoformat(),
 
         }

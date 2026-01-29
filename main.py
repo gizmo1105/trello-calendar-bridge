@@ -40,13 +40,13 @@ def main():
                     skipped += 1
                     continue
 
-                body, booking, start_dt = result
+                body, booking, start_dt, service_flags = result
                 if start_dt < now:
                     continue
 
                 body["description"] = f"{SYNC_MARKER}\n{body.get('description','')}".strip()
 
-                db.upsert_booking(card, booking)
+                db.upsert_booking(card, booking, service_flags)
                 insert_event(service, CALENDAR_ID, body)
                 processed += 1
             
